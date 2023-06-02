@@ -1,10 +1,10 @@
 variable "kali-user" {
     type = string
-    default = "adminuser"
+    default = "kali"
 }
 variable "kali-password" {
     type = string
-    default = "P@ssw0rd1234!"
+    default = "kali"
 }
 
 variable "ad-user" {
@@ -15,4 +15,14 @@ variable "ad-user" {
 variable "ad-password" {
     type = string
     default = "SecurePassword1234!"
+}
+
+variable "ms3-user" {
+    type = string
+    default = "ms3admin"
+}
+
+variable "ms3-password" {
+    type = string
+    default = "Metasploit1234!"
 }
