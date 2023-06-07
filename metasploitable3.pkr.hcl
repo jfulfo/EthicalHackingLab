@@ -23,61 +23,60 @@ variable "ARM_TENANT_ID" {
 }
 
 source "azure-arm" "metasploitable3" {
-    subscription_id = var.ARM_SUBSCRIPTION_ID
-    client_id       = var.ARM_CLIENT_ID
-    client_secret   = var.ARM_CLIENT_SECRET
-    tenant_id       = var.ARM_TENANT_ID
+  subscription_id = var.ARM_SUBSCRIPTION_ID
+  client_id       = var.ARM_CLIENT_ID
+  client_secret   = var.ARM_CLIENT_SECRET
+  tenant_id       = var.ARM_TENANT_ID
 
-    managed_image_resource_group_name = "ResourceGroup1"
-    managed_image_name = "metasploitable3"
+  managed_image_resource_group_name = "ResourceGroup1"
+  managed_image_name = "metasploitable3"
 
-    os_type  = "Linux"
-    image_publisher = "Canonical"
-    image_offer     = "UbuntuServer"
-    image_sku       = "18.04-LTS"
+  os_type  = "Linux"
+  image_publisher = "Canonical"
+  image_offer     = "UbuntuServer"
+  image_sku       = "14.04.0-LTS"
 
-    location = "East US"
-    vm_size  = "Standard_D2s_v3"
+  location = "East US"
+  vm_size  = "Standard_D2s_v3"
 }
 
 build {
-    sources = ["source.azure-arm.metasploitable3"]
-    name = "metasploitable3"
+  sources = ["source.azure-arm.metasploitable3"]
+  name = "metasploitable3"
 
-    provisioner "chef-solo" {
-      cookbook_paths = ["cookbooks"]
-      run_list = [
-        "apt::default",
-        "iptables::default",
-        "metasploitable::users",
-      /*
-        "metasploitable::mysql",
-        "metasploitable::apache_continuum",
-        "metasploitable::apache",
-        "metasploitable::php_545",
-        "metasploitable::phpmyadmin",
-        "metasploitable::proftpd",
-        "metasploitable::docker",
-        "metasploitable::samba",
-        "metasploitable::sinatra",
-        "metasploitable::unrealircd",
-        "metasploitable::chatbot",
-        "metasploitable::payroll_app",
-        "metasploitable::readme_app",
-        "metasploitable::cups",
-        "metasploitable::drupal",
-        "metasploitable::knockd",
-        "metasploitable::iptables",
-        "metasploitable::flags",
-        "metasploitable::sshd",
-        "metasploitable::log4shell",
-        "metasploitable::clear_cache"
-      */
-      ]
-    }
+  provisioner "chef-solo" {
+    cookbook_paths = ["cookbooks"]
+    version = "13.8.5"
+    run_list = [
+      "apt::default",
+      "iptables::default",
+      "metasploitable::users",
+      "metasploitable::mysql",
+      "metasploitable::apache_continuum",
+      "metasploitable::apache",
+      "metasploitable::php_545",
+      "metasploitable::phpmyadmin",
+      "metasploitable::proftpd",
+      "metasploitable::docker",
+      "metasploitable::samba",
+      "metasploitable::sinatra",
+      "metasploitable::unrealircd",
+      "metasploitable::chatbot",
+      "metasploitable::payroll_app",
+      "metasploitable::readme_app",
+      "metasploitable::cups",
+      "metasploitable::drupal",
+      "metasploitable::knockd",
+      "metasploitable::iptables",
+      "metasploitable::flags",
+      "metasploitable::sshd",
+      #"metasploitable::log4shell",
+      "metasploitable::clear_cache"
+    ]
+  }
 
-    provisioner "shell" {
-        inline = [ "sudo apt -y remove chef" ]
-    }
+  provisioner "shell" {
+    inline = [ "sudo apt -y remove chef" ]
+  }
 }
 

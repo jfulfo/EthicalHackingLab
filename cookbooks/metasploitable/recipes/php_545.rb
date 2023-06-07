@@ -29,8 +29,8 @@ remote_file "#{Chef::Config[:file_cache_path]}/#{php_tar}" do
   not_if 'apache2ctl -M | grep -q php5'
 end
 
-remote_file "#{Chef::Config[:file_cache_path]}/libxml29_compat.patch" do
-  source "https://mail.gnome.org/archives/xml/2012-August/txtbgxGXAvz4N.txt"
+cookbook_file "#{Chef::Config[:file_cache_path]}/libxml29_compat.patch" do
+  source "txtbgxGXAvz4N.txt"
   mode '0644'
   action :create_if_missing
   not_if 'apache2ctl -M | grep -q php5'

@@ -38,6 +38,7 @@ module DockerCookbook
         when '18.03.0' then 'e5dff6245172081dbf14285dafe4dede761f8bc1750310156b89928dbf56a9ee'
         when '18.03.1' then '0e245c42de8a21799ab11179a4fce43b494ce173a8a2d6567ea6825d6c5265aa'
         when '18.06.0' then '1c2fa625496465c68b856db0ba850eaad7a16221ca153661ca718de4a2217705'
+        when '18.06.1' then '83be159cf0657df9e1a1a4a127d181725a982714a983b2bdcc0621244df93687'
         end
       end
     end
