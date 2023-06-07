@@ -34,3 +34,13 @@ variable "ms3-linux-user" {
     type = string
     default = "ms3linux"
 }
+
+variable "mssql-admin-user" {
+    type = string
+    default = "mssqladmin"
+}
+
+variable "mssql-admin-passowrd" {
+    type = string
+    default = "MSSQLPassword123!"
+}
