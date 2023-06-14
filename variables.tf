@@ -5,6 +5,16 @@ variable "SUBSCRIPTION_ID" { # should be overriden by environment variable
     default = "[subscription_id]"
 }
 
+variable "storage_account_name" {
+    type = string
+    default = "ethicalhackingstorage1"
+}
+
+variable "storage_container_name" {
+    type = string
+    default = "ethicalhackingcontainer1"
+}
+
 variable "kali-user" {
     type = string
     default = "kali"

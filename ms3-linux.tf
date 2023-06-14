@@ -38,9 +38,9 @@ resource "azurerm_linux_virtual_machine" "ms3_linux" {
     storage_account_type = "Premium_LRS"
   }
 
-  source_image_id = "/subscriptions/${var.SUBSCRIPTION_ID}/resourceGroups/ResourceGroup1/providers/Microsoft.Compute/images/metasploitable3"
+  source_image_id = "/subscriptions/${var.SUBSCRIPTION_ID}/resourceGroups/ResourceGroup1/providers/Microsoft.Compute/images/ms3-linux"
 
   depends_on = [
-    null_resource.ms3_packer
+    null_resource.ms3_linux_packer
   ]
 }
