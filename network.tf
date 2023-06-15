@@ -35,6 +35,8 @@ resource "azurerm_network_security_group" "nsg" {
     direction                  = "Inbound"
     access                     = "Allow"
     protocol                   = "Icmp"
+    source_port_range          = "*"
+    destination_port_range     = "*"
     source_address_prefix      = "10.1.1.0/24"
     destination_address_prefix = "*"
   }
@@ -57,6 +59,20 @@ resource "azurerm_subnet_network_security_group_association" "subnet_nsg_associa
   network_security_group_id = azurerm_network_security_group.nsg.id
 }
 
+resource "azurerm_virtual_network" "vnet2" {
+  name                = "vnet2"
+  resource_group_name = azurerm_resource_group.rg2.name
+  location            = azurerm_resource_group.rg2.location
+  address_space       = ["10.1.0.0/16"]
+}
+
+resource "azurerm_subnet" "subnet2" {
+  name                 = "subnet2"
+  resource_group_name  = azurerm_resource_group.rg2.name
+  virtual_network_name = azurerm_virtual_network.vnet2.name
+  address_prefixes     = ["10.1.1.0/24"]
+}
+
 resource "azurerm_network_security_group" "nsg_kali_provisioning" {
   name                = "NSG_Kali_Provisioning"
   location            = azurerm_resource_group.rg2.location
@@ -73,6 +89,8 @@ resource "azurerm_network_security_group" "nsg_kali_provisioning" {
     source_address_prefix      = "*"
     destination_address_prefix = "*"
   }
+
+  
 }
 
 resource "azurerm_subnet_network_security_group_association" "subnet2_nsg_kali_provisioning_association" {
@@ -93,7 +111,7 @@ resource "azurerm_network_security_group" "nsg2" {
     protocol                   = "Udp"
     source_port_range          = "*"
     destination_port_range     = "51820"
-    source_address_prefix      = "10.1.10.0/24"
+    source_address_prefix      = "0.0.0.0/0"
     destination_address_prefix = "*"
   }
 
@@ -168,30 +186,25 @@ resource "azurerm_network_security_group" "nsg2" {
     source_address_prefix      = "*"
     destination_address_prefix = "*"
   }
+}
+
+resource "null_resource" "remove_provisioning_association" {
+  provisioner "local-exec" {
+    command = "az network vnet subnet update --name ${azurerm_subnet.subnet2.name} --resource-group ${azurerm_resource_group.rg2.name} --vnet-name ${azurerm_virtual_network.vnet2.name} --network-security-group ${azurerm_network_security_group.nsg2.name}"
+  }
 
   depends_on = [null_resource.get_wg_public_key]
 }
+
 
 resource "azurerm_subnet_network_security_group_association" "subnet2_nsg2_association" {
   subnet_id                 = azurerm_subnet.subnet2.id
   network_security_group_id = azurerm_network_security_group.nsg2.id
 
-  depends_on = [azurerm_network_security_group.nsg2]
+  depends_on = [null_resource.remove_provisioning_association]
 }
 
-resource "azurerm_virtual_network" "vnet2" {
-  name                = "vnet2"
-  resource_group_name = azurerm_resource_group.rg2.name
-  location            = azurerm_resource_group.rg2.location
-  address_space       = ["10.1.0.0/16"]
-}
 
-resource "azurerm_subnet" "subnet2" {
-  name                 = "subnet2"
-  resource_group_name  = azurerm_resource_group.rg2.name
-  virtual_network_name = azurerm_virtual_network.vnet2.name
-  address_prefixes     = ["10.1.1.0/24"]
-}
 
 resource "azurerm_virtual_network_peering" "vnet1_to_vnet2" {
   name                      = "vnet1ToVnet2"

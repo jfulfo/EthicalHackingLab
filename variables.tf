@@ -1,24 +1,24 @@
-# Note: You must set the environment variables for "TF_VAR_SUBSCRIPTION_ID" 
+# Note: You must set the environment variables for "TF_VAR_ARM_SUBSCRIPTION_ID" 
 # Replace "client_public_key" with your Wireguard public key
 
-variable "SUBSCRIPTION_ID" { # should be overriden by environment variable
+variable "ARM_SUBSCRIPTION_ID" { # should be overriden by environment variable
   type = string
   default = "" # leave blank
 }
 
 variable "storage_account_name" {
   type = string
-  default = "ethicalhackingstorage1"
+  default = "ethicalhackingstorage2"
 }
 
 variable "storage_container_name" {
   type = string
-  default = "ethicalhackingcontainer1"
+  default = "ethicalhackingcontainer2"
 }
 
 variable "mssql_server_name" {
   type = string 
-  default = "ethicalhackingmssql1"
+  default = "ethicalhackingmssql2"
 }
 
 variable "kali-user" {

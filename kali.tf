@@ -75,6 +75,7 @@ resource "null_resource" "kali_setup" {
       "sudo DEBIAN_FRONTEND=noninteractive apt install wireguard -y",
       "umask 077",
       "wg genkey > privatekey",
+      "wg pubkey < privatekey > publickey",
       "echo \"[Interface]\nPrivateKey = $(cat privatekey)\nAddress = 10.1.10.1/24\nListenPort = 51820\n\n[Peer]\nPublicKey = ${local.client_public_key}\nAllowedIPs = 10.1.10.2/32\" | sudo tee /etc/wireguard/wg0.conf",
       "sudo wg-quick up wg0",
       "sudo systemctl enable wg-quick@wg0"
