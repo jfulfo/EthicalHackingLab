@@ -4,3 +4,6 @@ terraform.tfstate
 terraform.tfstate.backup
 resources.zip
 scripts.zip
+kali_public_key
+publickey 
+privatekey

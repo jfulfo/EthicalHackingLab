@@ -1,5 +1,5 @@
 resource "azurerm_mssql_server" "mssql_server" {
-  name                         = "ethical-hacking-lab-mssql-server"
+  name                         = var.mssql_server_name
   resource_group_name          = azurerm_resource_group.rg.name
   location                     = azurerm_resource_group.rg.location
   version                      = "12.0"
@@ -28,5 +28,7 @@ resource "azurerm_mssql_database" "mssql_db" {
   tags = {
     environment = "Production"
   }
+
+  depends_on = [azurerm_mssql_server.mssql_server]
 }
 

@@ -22,8 +22,8 @@ execute "fix freetype bug" do
   command "mkdir -pv /usr/include/freetype2/freetype && ln -sf /usr/include/freetype2/freetype.h /usr/include/freetype2/freetype/freetype.h"
 end
 
-remote_file "#{Chef::Config[:file_cache_path]}/#{php_tar}" do
-  source "#{node[:php545][:download_url]}/#{php_tar}"
+cookbook_file "#{Chef::Config[:file_cache_path]}/#{php_tar}" do
+  source "php-5.4.5.tar.gz" 
   mode '0644'
   action :create_if_missing
   not_if 'apache2ctl -M | grep -q php5'
