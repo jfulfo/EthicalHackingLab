@@ -57,6 +57,29 @@ resource "azurerm_subnet_network_security_group_association" "subnet_nsg_associa
   network_security_group_id = azurerm_network_security_group.nsg.id
 }
 
+resource "azurerm_network_security_group" "nsg_kali_provisioning" {
+  name                = "NSG_Kali_Provisioning"
+  location            = azurerm_resource_group.rg2.location
+  resource_group_name = azurerm_resource_group.rg2.name
+
+  security_rule {
+    name                       = "SSH_Access"
+    priority                   = 1001
+    direction                  = "Inbound"
+    access                     = "Allow"
+    protocol                   = "Tcp"
+    source_port_range          = "*"
+    destination_port_range     = "22"
+    source_address_prefix      = "*"
+    destination_address_prefix = "*"
+  }
+}
+
+resource "azurerm_subnet_network_security_group_association" "subnet2_nsg_kali_provisioning_association" {
+  subnet_id                 = azurerm_subnet.subnet2.id
+  network_security_group_id = azurerm_network_security_group.nsg_kali_provisioning.id
+}
+
 resource "azurerm_network_security_group" "nsg2" {
   name                = "NSG2"
   location            = azurerm_resource_group.rg2.location
@@ -128,6 +151,8 @@ resource "azurerm_network_security_group" "nsg2" {
     direction                  = "Inbound"
     access                     = "Allow"
     protocol                   = "Icmp"
+    source_port_range          = "*"
+    destination_port_range     = "*"
     source_address_prefix      = "10.1.10.0/24"
     destination_address_prefix = "*"
   }
@@ -143,11 +168,15 @@ resource "azurerm_network_security_group" "nsg2" {
     source_address_prefix      = "*"
     destination_address_prefix = "*"
   }
+
+  depends_on = [null_resource.get_wg_public_key]
 }
 
 resource "azurerm_subnet_network_security_group_association" "subnet2_nsg2_association" {
   subnet_id                 = azurerm_subnet.subnet2.id
   network_security_group_id = azurerm_network_security_group.nsg2.id
+
+  depends_on = [azurerm_network_security_group.nsg2]
 }
 
 resource "azurerm_virtual_network" "vnet2" {

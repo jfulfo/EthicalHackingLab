@@ -33,5 +33,5 @@ output "NOTE" {
 }
 
 output "connect_to_kali" {
-  value = "use ssh kali@{kali_private_ip_address} to connect to the Kali VM, ensure that wireguard configuration is set up correctly"
+  value = "use ssh kali@${azurerm_linux_virtual_machine.kali_machine.private_ip_address} to connect to the Kali VM, ensure that wireguard configuration is set up correctly"
 }
