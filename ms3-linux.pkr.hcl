@@ -22,6 +22,19 @@ variable "ARM_TENANT_ID" {
   sensitive = true
 }
 
+packer {
+  required_plugins {
+    azure = {
+      version = "1.4.2"
+      source = "github.com/hashicorp/azure"
+    }
+    chef = {
+      version = ">= 1.0.0"
+      source = "github.com/hashicorp/chef"
+    }
+  }
+}
+
 source "azure-arm" "ms3-linux" {
   subscription_id = var.ARM_SUBSCRIPTION_ID
   client_id       = var.ARM_CLIENT_ID

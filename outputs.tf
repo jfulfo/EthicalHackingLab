@@ -32,6 +32,6 @@ output "NOTE" {
   value = "The ms3 windows machine is a placeholder since the packer build is not working"
 }
 
-output "Connecting to Kali" {
+output "connect_to_kali" {
   value = "use ssh kali@{kali_private_ip_address} to connect to the Kali VM, ensure that wireguard configuration is set up correctly"
 }
