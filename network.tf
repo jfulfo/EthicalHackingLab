@@ -73,31 +73,6 @@ resource "azurerm_subnet" "subnet2" {
   address_prefixes     = ["10.1.1.0/24"]
 }
 
-resource "azurerm_network_security_group" "nsg_kali_provisioning" {
-  name                = "NSG_Kali_Provisioning"
-  location            = azurerm_resource_group.rg2.location
-  resource_group_name = azurerm_resource_group.rg2.name
-
-  security_rule {
-    name                       = "SSH_Access"
-    priority                   = 1001
-    direction                  = "Inbound"
-    access                     = "Allow"
-    protocol                   = "Tcp"
-    source_port_range          = "*"
-    destination_port_range     = "22"
-    source_address_prefix      = "*"
-    destination_address_prefix = "*"
-  }
-
-  
-}
-
-resource "azurerm_subnet_network_security_group_association" "subnet2_nsg_kali_provisioning_association" {
-  subnet_id                 = azurerm_subnet.subnet2.id
-  network_security_group_id = azurerm_network_security_group.nsg_kali_provisioning.id
-}
-
 resource "azurerm_network_security_group" "nsg2" {
   name                = "NSG2"
   location            = azurerm_resource_group.rg2.location
@@ -112,6 +87,18 @@ resource "azurerm_network_security_group" "nsg2" {
     source_port_range          = "*"
     destination_port_range     = "51820"
     source_address_prefix      = "0.0.0.0/0"
+    destination_address_prefix = "*"
+  }
+
+  security_rule {
+    name                       = "Personal_SSH_Access"
+    priority                   = 1002
+    direction                  = "Inbound"
+    access                     = "Allow"
+    protocol                   = "Tcp"
+    source_port_range          = "*"
+    destination_port_range     = "22"
+    source_address_prefix      = "${data.http.personal_public_ip.response_body}/32"
     destination_address_prefix = "*"
   }
 
@@ -254,6 +241,7 @@ resource "azurerm_subnet_network_security_group_association" "subnet2_nsg2_assoc
   network_security_group_id = azurerm_network_security_group.nsg2.id
 }
 */
+
 resource "azurerm_virtual_network_peering" "vnet1_to_vnet2" {
   name                      = "vnet1ToVnet2"
   resource_group_name       = azurerm_resource_group.rg.name

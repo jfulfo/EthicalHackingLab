@@ -65,3 +65,7 @@ variable "mssql-admin-passowrd" {
   type = string
   default = "MSSQLPassword123!"
 }
+
+data "http" "personal_public_ip" {
+  url = "https://api.ipify.org"
+}
