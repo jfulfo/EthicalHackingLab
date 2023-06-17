@@ -78,16 +78,7 @@ AllowedIPs = 0.0.0.0/0, ::/0
 EOF
 
 # enable wireguard
-sudo systemctl enable wg-quick@wg0
 sudo wg-quick up wg0
-
-# verify connection automatically
-ping -c 3 
-if [ $? -eq 0 ]; then
-    echo "Connection successful"
-else
-    echo "Connection failed"
-fi
 
 echo "Setup complete"
 echo "You can now connect to the Kali VM using the following command:\nssh kali@$KALI_IP"

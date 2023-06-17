@@ -10,36 +10,29 @@ Tested with:
 
 ## Installation
 
+You can clone the repository and run the scripts manually, or use the automated installation script.
+
 This guide uses Ubuntu 22.04 LTS.
 
-1. Update system packages:
+1. Update and install system packages:
     ```
     sudo apt update
     sudo apt upgrade -y
+    sudo apt install -y net-tools openssh-server curl gnupg software-properties-common
     ```
 
-2. Install required packages:
-    ```
-    sudo apt install -y net-tools openssh-server git curl
-    ```
-
-3. Generate new SSH key (no passphrase):
+2. Generate new SSH key (no passphrase):
     ```
     ssh-keygen
     ```
 
-4. Clone EthicalHacking repository:
+3. Clone EthicalHacking repository:
     ```
     git clone https://github.com/jfulfo/EthicalHacking
     cd EthicalHacking
     ```
 
-5. Install Terraform required packages:
-    ```
-    sudo apt install gnupg software-properties-common -y
-    ```
-
-6. Install Terraform:
+4. Install Terraform:
     ```
     wget -O- https://apt.releases.hashicorp.com/gpg | gpg --dearmor | sudo tee /usr/share/keyrings/hashicorp-archive-keyring.gpg
     gpg --no-default-keyring --keyring /usr/share/keyrings/hashicorp-archive-keyring.gpg --fingerprint
@@ -48,13 +41,13 @@ This guide uses Ubuntu 22.04 LTS.
     sudo apt install terraform -y
     ```
 
-7. Install Azure CLI:
+5. Install Azure CLI:
     ```
     curl -sL https://aka.ms/InstallAzureCLIDeb | sudo bash
     az login
     ```
 
-8. Setup Azure subscription:
+6. Setup Azure subscription:
     ```
     az account list --output table
     az account set --subscription "subscriptionId"
@@ -62,22 +55,25 @@ This guide uses Ubuntu 22.04 LTS.
     az vm image terms accept --urn kali-linux:kali:kali:latest
     ```
 
-9. Add Azure subscription ID and client details to .bashrc (replace with actual values):
+7. Add Azure subscription ID and client details to .bashrc (replace with actual values):
     ```
     export TF_VAR_ARM_SUBSCRIPTION_ID="subscriptionId"
+    export PKR_VAR_ARM_SUBSCRIPTION_ID="subscriptionId"
     export PKR_VAR_ARM_CLIENT_ID="appId"
     export PKR_VAR_ARM_CLIENT_SECRET="password"
     export PKR_VAR_ARM_TENANT_ID="tenant"
     ```
 
-10. Initialize Terraform and install Packer:
+8. Initialize Terraform and install Packer:
     ```
     source ~/.bashrc
     terraform init
     sudo apt install packer
+    packer init ms3-linux.pkr.hcl
+    packer init ms3-windows.pkr.hcl
     ```
 
-11. Install WireGuard and generate keys:
+9. Install WireGuard and generate keys:
     ```
     sudo apt install wireguard -y
     umask 077
@@ -85,13 +81,13 @@ This guide uses Ubuntu 22.04 LTS.
     wg pubkey < privatekey > publickey
     ```
 
-12. Deploy infrastructure using Terraform:
+10. Deploy infrastructure using Terraform:
     ```
     terraform plan
     terraform apply
     ```
 
-13. Update WireGuard configuration file (wg0.conf):
+11. Update WireGuard configuration file (wg0.conf):
     ```
     [Interface]
     PrivateKey = private_key
@@ -104,13 +100,13 @@ This guide uses Ubuntu 22.04 LTS.
     AllowedIPs = 0.0.0.0/0, ::/0
     ```
 
-14. Bring up VPN and establish SSH connection with Kali machine:
+12. Bring up VPN and establish SSH connection with Kali machine:
     ```
     sudo wg-quick up wg0.conf
     ssh kali@{kali_private_ip}
     ```
 
-For more information and help, visit [GitHub repository](https://github.com/Metasploit-Book/Setup-Scripts-Instructions).
+For more information and help, visit the book's [GitHub repository](https://github.com/Metasploit-Book/Setup-Scripts-Instructions).
 
 ## Contributors
 - Daniel Graham

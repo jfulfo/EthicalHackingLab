@@ -80,7 +80,7 @@ resource "azurerm_network_security_group" "nsg2" {
 
   security_rule {
     name                       = "WireGuard_Access"
-    priority                   = 1001
+    priority                   = 1000
     direction                  = "Inbound"
     access                     = "Allow"
     protocol                   = "Udp"
@@ -92,7 +92,7 @@ resource "azurerm_network_security_group" "nsg2" {
 
   security_rule {
     name                       = "Personal_SSH_Access"
-    priority                   = 1002
+    priority                   = 1001
     direction                  = "Inbound"
     access                     = "Allow"
     protocol                   = "Tcp"
