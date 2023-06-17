@@ -116,7 +116,7 @@ resource "azurerm_network_security_group" "nsg2" {
   }
 
   security_rule {
-    name                       = "SSH_Access"
+    name                       = "WG_SSH_Access"
     priority                   = 1002
     direction                  = "Inbound"
     access                     = "Allow"
@@ -127,21 +127,34 @@ resource "azurerm_network_security_group" "nsg2" {
     destination_address_prefix = "*"
   }
 
+
   security_rule {
-    name                       = "ReverseShell_Access"
+    name                       = "SSH_Access"
     priority                   = 1003
     direction                  = "Inbound"
     access                     = "Allow"
     protocol                   = "Tcp"
     source_port_range          = "*"
-    destination_port_range     = "8800-8899"
-    source_address_prefix      = "10.1.10.0/24"
+    destination_port_range     = "22"
+    source_address_prefix      = "10.0.1.0/24"
     destination_address_prefix = "*"
   }
 
   security_rule {
-    name                       = "HTTP_Access"
+    name                       = "ReverseShell_Access"
     priority                   = 1004
+    direction                  = "Inbound"
+    access                     = "Allow"
+    protocol                   = "Tcp"
+    source_port_range          = "*"
+    destination_port_range     = "8800-8899"
+    source_address_prefix      = "10.0.1.0/24"
+    destination_address_prefix = "*"
+  }
+
+  security_rule {
+    name                       = "WG_HTTP_Access"
+    priority                   = 1005
     direction                  = "Inbound"
     access                     = "Allow"
     protocol                   = "Tcp"
@@ -151,9 +164,22 @@ resource "azurerm_network_security_group" "nsg2" {
     destination_address_prefix = "*"
   }
 
+
   security_rule {
-    name                       = "HTTPS_Access"
-    priority                   = 1005
+    name                       = "HTTP_Access"
+    priority                   = 1006
+    direction                  = "Inbound"
+    access                     = "Allow"
+    protocol                   = "Tcp"
+    source_port_range          = "*"
+    destination_port_range     = "80"
+    source_address_prefix      = "10.0.1.0/24"
+    destination_address_prefix = "*"
+  }
+
+  security_rule {
+    name                       = "WG_HTTPS_Access"
+    priority                   = 1007
     direction                  = "Inbound"
     access                     = "Allow"
     protocol                   = "Tcp"
@@ -163,9 +189,22 @@ resource "azurerm_network_security_group" "nsg2" {
     destination_address_prefix = "*"
   }
 
+
   security_rule {
-    name                       = "ICMP_Access"
-    priority                   = 1006
+    name                       = "HTTPS_Access"
+    priority                   = 1008
+    direction                  = "Inbound"
+    access                     = "Allow"
+    protocol                   = "Tcp"
+    source_port_range          = "*"
+    destination_port_range     = "443"
+    source_address_prefix      = "10.0.1.0/24"
+    destination_address_prefix = "*"
+  }
+
+  security_rule {
+    name                       = "WG_ICMP_Access"
+    priority                   = 1009
     direction                  = "Inbound"
     access                     = "Allow"
     protocol                   = "Icmp"
@@ -175,9 +214,22 @@ resource "azurerm_network_security_group" "nsg2" {
     destination_address_prefix = "*"
   }
 
+
+  security_rule {
+    name                       = "ICMP_Access"
+    priority                   = 1010
+    direction                  = "Inbound"
+    access                     = "Allow"
+    protocol                   = "Icmp"
+    source_port_range          = "*"
+    destination_port_range     = "*"
+    source_address_prefix      = "10.0.1.0/24"
+    destination_address_prefix = "*"
+  }
+
   security_rule {
     name                       = "Outbound_Allow_All"
-    priority                   = 1007
+    priority                   = 1011
     direction                  = "Outbound"
     access                     = "Allow"
     protocol                   = "*"
@@ -188,7 +240,7 @@ resource "azurerm_network_security_group" "nsg2" {
   }
 }
 
-resource "null_resource" "remove_provisioning_association" {
+resource "null_resource" "remove_provisioning_association" { # voodoo that applies the below association because terraform cant handle it
   provisioner "local-exec" {
     command = "az network vnet subnet update --name ${azurerm_subnet.subnet2.name} --resource-group ${azurerm_resource_group.rg2.name} --vnet-name ${azurerm_virtual_network.vnet2.name} --network-security-group ${azurerm_network_security_group.nsg2.name}"
   }
@@ -196,16 +248,12 @@ resource "null_resource" "remove_provisioning_association" {
   depends_on = [null_resource.get_wg_public_key]
 }
 
-
+/*
 resource "azurerm_subnet_network_security_group_association" "subnet2_nsg2_association" {
   subnet_id                 = azurerm_subnet.subnet2.id
   network_security_group_id = azurerm_network_security_group.nsg2.id
-
-  depends_on = [null_resource.remove_provisioning_association]
 }
-
-
-
+*/
 resource "azurerm_virtual_network_peering" "vnet1_to_vnet2" {
   name                      = "vnet1ToVnet2"
   resource_group_name       = azurerm_resource_group.rg.name
