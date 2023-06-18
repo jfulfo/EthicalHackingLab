@@ -70,7 +70,10 @@ resource "null_resource" "kali_setup" {
     inline = [
       "sudo apt update",
       "sudo DEBIAN_FRONTEND=noninteractive apt upgrade -y",
-      "sudo DEBIAN_FRONTEND=noninteractive apt install kali-linux-everything -y",
+      "sudo DEBIAN_FRONTEND=noninteractive apt install kali-linux-everything kali-desktop-xfce xrdp -y",
+      "echo xfce4-session > ~/.xsession",
+      "sudo systemctl enable xrdp",
+      "sudo systemctl start xrdp",
       "touch ~/.hushlogin",
       "sudo DEBIAN_FRONTEND=noninteractive apt install wireguard -y",
       "umask 077",

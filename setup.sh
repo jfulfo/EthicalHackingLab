@@ -31,7 +31,7 @@ az ad sp create-for-rbac --role="Contributor" --scopes="/subscriptions/$SUBSCRIP
 read -p "Enter the client id (appId): " CLIENT_ID
 read -p "Enter the client secret (password): " CLIENT_SECRET
 read -p "Enter the tenant id (tenant): " TENANT_ID
-az vm image terms accept --urn kali_linux:kali:kali:latest
+az vm image terms accept --urn kali-linux:kali:kali:latest
 
 # export variables to bashrc
 echo "export TF_VAR_ARM_SUBSCRIPTION_ID=$SUBSCRIPTION_ID" >> ~/.bashrc
