@@ -39,6 +39,7 @@ echo "export PKR_VAR_ARM_SUBSCRIPTION_ID=$SUBSCRIPTION_ID" >> ~/.bashrc
 echo "export PKR_VAR_ARM_CLIENT_ID=$CLIENT_ID" >> ~/.bashrc 
 echo "export PKR_VAR_ARM_CLIENT_SECRET=$CLIENT_SECRET" >> ~/.bashrc 
 echo "export PKR_VAR_ARM_TENANT_ID=$TENANT_ID" >> ~/.bashrc 
+source ~/.bashrc
 
 # initialize terraform and packer
 terraform init 
