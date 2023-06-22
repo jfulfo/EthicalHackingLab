@@ -1,21 +1,21 @@
-resource "azurerm_virtual_network" "vnet" {
-  name                = "vnet1"
-  resource_group_name = azurerm_resource_group.rg.name
-  location            = azurerm_resource_group.rg.location
+resource "azurerm_virtual_network" "target_vnet" {
+  name                = "target_vnet"
+  resource_group_name = azurerm_resource_group.target_rg.name
+  location            = azurerm_resource_group.target_rg.location
   address_space       = ["10.0.0.0/16"]
 }
 
-resource "azurerm_subnet" "subnet" {
-  name                 = "subnet1"
-  resource_group_name  = azurerm_resource_group.rg.name
-  virtual_network_name = azurerm_virtual_network.vnet.name
+resource "azurerm_subnet" "target_subnet" {
+  name                 = "target_subnet"
+  resource_group_name  = azurerm_resource_group.target_rg.name
+  virtual_network_name = azurerm_virtual_network.target_vnet.name
   address_prefixes     = ["10.0.1.0/24"]
 }
 
-resource "azurerm_network_security_group" "nsg" {
-  name                = "NSG"
-  location            = azurerm_resource_group.rg.location
-  resource_group_name = azurerm_resource_group.rg.name
+resource "azurerm_network_security_group" "target_nsg" {
+  name                = "target_nsg"
+  location            = azurerm_resource_group.target_rg.location
+  resource_group_name = azurerm_resource_group.target_rg.name
 
   security_rule {
     name                       = "Inbound_Allow_All"
@@ -55,28 +55,35 @@ resource "azurerm_network_security_group" "nsg" {
 }
 
 resource "azurerm_subnet_network_security_group_association" "subnet_nsg_association" {
-  subnet_id                 = azurerm_subnet.subnet.id
-  network_security_group_id = azurerm_network_security_group.nsg.id
+  subnet_id                 = azurerm_subnet.target_subnet.id
+  network_security_group_id = azurerm_network_security_group.target_nsg.id
 }
 
-resource "azurerm_virtual_network" "vnet2" {
-  name                = "vnet2"
-  resource_group_name = azurerm_resource_group.rg2.name
-  location            = azurerm_resource_group.rg2.location
+resource "azurerm_mssql_firewall_rule" "mssql_firewall_rule" {
+  name                = "sql_firewall_rule"
+  server_id           = azurerm_mssql_server.mssql_server.id
+  start_ip_address    = azurerm_linux_virtual_machine.kali_machine.private_ip_address
+  end_ip_address      = azurerm_linux_virtual_machine.kali_machine.private_ip_address
+}
+
+resource "azurerm_virtual_network" "attacker_vnet" {
+  name                = "attacker_vnet"
+  resource_group_name = azurerm_resource_group.attacker_rg.name
+  location            = azurerm_resource_group.attacker_rg.location
   address_space       = ["10.1.0.0/16"]
 }
 
-resource "azurerm_subnet" "subnet2" {
-  name                 = "subnet2"
-  resource_group_name  = azurerm_resource_group.rg2.name
-  virtual_network_name = azurerm_virtual_network.vnet2.name
+resource "azurerm_subnet" "attacker_subnet" {
+  name                 = "attacker_subnet"
+  resource_group_name  = azurerm_resource_group.attacker_rg.name
+  virtual_network_name = azurerm_virtual_network.attacker_vnet.name
   address_prefixes     = ["10.1.1.0/24"]
 }
 
-resource "azurerm_network_security_group" "nsg2" {
-  name                = "NSG2"
-  location            = azurerm_resource_group.rg2.location
-  resource_group_name = azurerm_resource_group.rg2.name
+resource "azurerm_network_security_group" "attacker_nsg" {
+  name                = "attacker_nsg"
+  location            = azurerm_resource_group.attacker_rg.location
+  resource_group_name = azurerm_resource_group.attacker_rg.name
 
   security_rule {
     name                       = "WireGuard_Access"
@@ -87,18 +94,6 @@ resource "azurerm_network_security_group" "nsg2" {
     source_port_range          = "*"
     destination_port_range     = "51820"
     source_address_prefix      = "0.0.0.0/0"
-    destination_address_prefix = "*"
-  }
-
-  security_rule {
-    name                       = "Personal_SSH_Access"
-    priority                   = 1001
-    direction                  = "Inbound"
-    access                     = "Allow"
-    protocol                   = "Tcp"
-    source_port_range          = "*"
-    destination_port_range     = "22"
-    source_address_prefix      = "${data.http.personal_public_ip.response_body}"
     destination_address_prefix = "*"
   }
 
@@ -253,21 +248,21 @@ resource "azurerm_network_security_group" "nsg2" {
 }
 
 resource "azurerm_subnet_network_security_group_association" "subnet2_nsg2_association" {
-  subnet_id                 = azurerm_subnet.subnet2.id
-  network_security_group_id = azurerm_network_security_group.nsg2.id
+  subnet_id                 = azurerm_subnet.attacker_subnet.id
+  network_security_group_id = azurerm_network_security_group.attacker_nsg.id
 }
 
-resource "azurerm_virtual_network_peering" "vnet1_to_vnet2" {
-  name                      = "vnet1ToVnet2"
-  resource_group_name       = azurerm_resource_group.rg.name
-  virtual_network_name      = azurerm_virtual_network.vnet.name
-  remote_virtual_network_id = azurerm_virtual_network.vnet2.id
+resource "azurerm_virtual_network_peering" "attacker_to_target" {
+  name                      = "attacker_to_target"
+  resource_group_name       = azurerm_resource_group.target_rg.name
+  virtual_network_name      = azurerm_virtual_network.target_vnet.name
+  remote_virtual_network_id = azurerm_virtual_network.attacker_vnet.id
 }
 
-resource "azurerm_virtual_network_peering" "vnet2_to_vnet1" {
-  name                      = "vnet2ToVnet1"
-  resource_group_name       = azurerm_resource_group.rg2.name
-  virtual_network_name      = azurerm_virtual_network.vnet2.name
-  remote_virtual_network_id = azurerm_virtual_network.vnet.id
+resource "azurerm_virtual_network_peering" "target_to_attacker" {
+  name                      = "target_to_attacker"
+  resource_group_name       = azurerm_resource_group.attacker_rg.name
+  virtual_network_name      = azurerm_virtual_network.attacker_vnet.name
+  remote_virtual_network_id = azurerm_virtual_network.target_vnet.id
 }
 

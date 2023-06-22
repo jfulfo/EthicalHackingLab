@@ -9,23 +9,9 @@ output "kali_private_ip_address" {
 }
 
 output "kali_wg_public_key" {
-  value = trimspace(data.local_file.wg_public_key.content)
+  value = data.local_file.kali_public_key.content
+  sensitive = false
   description = "The WireGuard public key of the Kali VM."
-}
-
-output "ad_public_ip_address" {
-  value = azurerm_windows_virtual_machine.ad_machine.public_ip_address
-  description = "The public IP address of the Active Directory VM."
-}
-
-output "ms3_windows_public_ip_address" {
-  value = azurerm_windows_virtual_machine.ms3_windows.public_ip_address
-  description = "The public IP address of the MS3 Windows VM."
-}
-
-output "ms3_linux_public_ip_address" {
-  value = azurerm_linux_virtual_machine.ms3_linux.public_ip_address
-  description = "The public IP address of the MS3 Linux VM."
 }
 
 output "NOTE" {

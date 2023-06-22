@@ -1,28 +1,42 @@
 resource "azurerm_public_ip" "pip_kali" {
   name                = "public_ip"
-  location            = azurerm_resource_group.rg2.location
-  resource_group_name = azurerm_resource_group.rg2.name
+  location            = azurerm_resource_group.attacker_rg.location
+  resource_group_name = azurerm_resource_group.attacker_rg.name
   allocation_method   = "Static"
   sku                 = "Standard"
 }
 
 resource "azurerm_network_interface" "ni_kali" {
   name                = "ni_kali"
-  location            = azurerm_resource_group.rg2.location
-  resource_group_name = azurerm_resource_group.rg2.name
+  location            = azurerm_resource_group.attacker_rg.location
+  resource_group_name = azurerm_resource_group.attacker_rg.name
 
   ip_configuration {
     name                          = "ipconfig"
-    subnet_id                     = azurerm_subnet.subnet2.id
+    subnet_id                     = azurerm_subnet.attacker_subnet.id
     private_ip_address_allocation = "Dynamic"
     public_ip_address_id          = azurerm_public_ip.pip_kali.id
   }
 }
 
+data "local_file" "client_public_key" {
+  filename = "publickey"
+}
+
+data "template_file" "kali_cloud_init" {
+  template = file("kali_cloud_init.yaml")
+
+  vars = {
+    admin_username     = "kali"
+    wg_private_key = data.local_file.kali_private_key.content
+    client_public_key =  data.local_file.client_public_key.content
+  }
+}
+
 resource "azurerm_linux_virtual_machine" "kali_machine" {
   name                = "KaliMachine"
-  resource_group_name = azurerm_resource_group.rg2.name
-  location            = azurerm_resource_group.rg2.location
+  resource_group_name = azurerm_resource_group.attacker_rg.name
+  location            = azurerm_resource_group.attacker_rg.location
   size                = "Standard_D2s_v3"
   admin_username      = var.kali-user
   network_interface_ids = [azurerm_network_interface.ni_kali.id]
@@ -50,52 +64,7 @@ resource "azurerm_linux_virtual_machine" "kali_machine" {
     product   = "kali"
     name      = "kali"
   }
+
+  custom_data = base64encode(data.template_file.kali_cloud_init.rendered)
 }
 
-locals {
-  client_public_key = file("publickey")
-}
-
-resource "null_resource" "kali_setup" {
-  depends_on = [azurerm_linux_virtual_machine.kali_machine]
-
-  connection {
-    type        = "ssh"
-    host        = azurerm_linux_virtual_machine.kali_machine.public_ip_address
-    user        = var.kali-user
-    private_key = file("~/.ssh/id_rsa")
-  }
-    
-  provisioner "remote-exec" {
-    inline = [
-      "sudo apt update",
-      "sudo DEBIAN_FRONTEND=noninteractive apt upgrade -y",
-      "sudo DEBIAN_FRONTEND=noninteractive apt install kali-linux-everything kali-desktop-xfce xrdp -y",
-      "echo xfce4-session > ~/.xsession",
-      "sudo systemctl enable xrdp",
-      "sudo systemctl start xrdp",
-      "touch ~/.hushlogin",
-      "sudo DEBIAN_FRONTEND=noninteractive apt install wireguard -y",
-      "umask 077",
-      "wg genkey > privatekey",
-      "wg pubkey < privatekey > publickey",
-      "echo \"[Interface]\nPrivateKey = $(cat privatekey)\nAddress = 10.1.10.1/24\nListenPort = 51820\n\n[Peer]\nPublicKey = ${local.client_public_key}\nAllowedIPs = 10.1.10.2/32\" | sudo tee /etc/wireguard/wg0.conf",
-      "sudo wg-quick up wg0",
-      "sudo systemctl enable wg-quick@wg0"
-    ]
-  }
-}
-
-resource "null_resource" "get_wg_public_key" {
-  depends_on = [null_resource.kali_setup]
-
-  provisioner "local-exec" {
-    command = "ssh -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa kali@${azurerm_linux_virtual_machine.kali_machine.public_ip_address} 'cat publickey' > kali_public_key"
-  }
-}
-
-data "local_file" "wg_public_key" {
-  depends_on = [null_resource.get_wg_public_key]
-
-  filename = "kali_public_key"
-}

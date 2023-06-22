@@ -1,5 +1,4 @@
 # Note: You must set the environment variables for "TF_VAR_ARM_SUBSCRIPTION_ID" 
-# Replace "client_public_key" with your Wireguard public key
 
 variable "ARM_SUBSCRIPTION_ID" { # should be overriden by environment variable
   type = string
@@ -8,17 +7,17 @@ variable "ARM_SUBSCRIPTION_ID" { # should be overriden by environment variable
 
 variable "storage_account_name" {
   type = string
-  default = "ethicalhackingstorage2"
+  default = "ethicalhackingstorage3"
 }
 
 variable "storage_container_name" {
   type = string
-  default = "ethicalhackingcontainer2"
+  default = "ethicalhackingcontainer3"
 }
 
 variable "mssql_server_name" {
   type = string 
-  default = "ethicalhackingmssql2"
+  default = "ethicalhackingmssql3"
 }
 
 variable "kali-user" {
@@ -64,8 +63,4 @@ variable "mssql-admin-user" {
 variable "mssql-admin-passowrd" {
   type = string
   default = "MSSQLPassword123!"
-}
-
-data "http" "personal_public_ip" {
-  url = "https://api.ipify.org"
 }

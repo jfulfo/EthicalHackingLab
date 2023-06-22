@@ -41,7 +41,7 @@ source "azure-arm" "ms3-linux" {
   client_secret   = var.ARM_CLIENT_SECRET
   tenant_id       = var.ARM_TENANT_ID
 
-  managed_image_resource_group_name = "ResourceGroup1"
+  managed_image_resource_group_name = "target_rg"
   managed_image_name = "ms3-linux"
 
   os_type  = "Linux"
