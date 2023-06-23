@@ -59,3 +59,5 @@ cmd.exe /c C:\vagrant\scripts\configs\configure_firewall.bat
 cmd.exe /c C:\vagrant\scripts\installs\install_elasticsearch.bat
 cmd.exe /c C:\vagrant\scripts\installs\install_flags.bat
 cmd.exe /c C:\vagrant\scripts\configs\packer_cleanup.bat
+
+shutdown.exe -r -f -t 0

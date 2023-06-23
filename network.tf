@@ -54,7 +54,7 @@ resource "azurerm_network_security_group" "target_nsg" {
   }
 }
 
-resource "azurerm_subnet_network_security_group_association" "subnet_nsg_association" {
+resource "azurerm_subnet_network_security_group_association" "target_subnet_nsg_association" {
   subnet_id                 = azurerm_subnet.target_subnet.id
   network_security_group_id = azurerm_network_security_group.target_nsg.id
 }
@@ -240,7 +240,7 @@ resource "azurerm_network_security_group" "attacker_nsg" {
   }
 }
 
-resource "azurerm_subnet_network_security_group_association" "subnet2_nsg2_association" {
+resource "azurerm_subnet_network_security_group_association" "attacker_subnet_nsg_association" {
   subnet_id                 = azurerm_subnet.attacker_subnet.id
   network_security_group_id = azurerm_network_security_group.attacker_nsg.id
 }

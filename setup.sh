@@ -59,6 +59,7 @@ if [ $CONTINUE == "n" ]; then
     exit 1
 fi
 terraform apply -auto-approve
+terraform output
 
 # get local privatekey
 PRIVATE_KEY=$(cat privatekey)

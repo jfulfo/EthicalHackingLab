@@ -70,7 +70,6 @@ This guide uses Ubuntu 22.04 LTS.
     terraform init
     sudo apt install packer
     packer init ms3-linux.pkr.hcl
-    packer init ms3-windows.pkr.hcl
     ```
 
 9. Install WireGuard and generate keys:
@@ -80,14 +79,30 @@ This guide uses Ubuntu 22.04 LTS.
     wg genkey > privatekey
     wg pubkey < privatekey > publickey
     ```
+10. Rename variables to unique name:
+    ```
+variable "storage_account_name" {
+  type = string
+  default = "UniqueAccountName"
+}
 
-10. Deploy infrastructure using Terraform:
+variable "storage_container_name" {
+  type = string
+  default = "UniqueContainerName"
+}
+
+variable "mssql_server_name" {
+  type = string 
+  default = "UniqueMSSQLName"
+}
+    ```
+
+11. Deploy infrastructure using Terraform:
     ```
     terraform plan
     terraform apply
     ```
-
-11. Update WireGuard configuration file (wg0.conf):
+12. Update WireGuard configuration file (wg0.conf):
     ```
     [Interface]
     PrivateKey = private_key
@@ -100,7 +115,7 @@ This guide uses Ubuntu 22.04 LTS.
     AllowedIPs = 0.0.0.0/0, ::/0
     ```
 
-12. Bring up VPN and establish SSH connection with Kali machine:
+13. Bring up VPN and establish SSH connection with Kali machine:
     ```
     sudo wg-quick up wg0.conf
     ssh kali@{kali_private_ip}
