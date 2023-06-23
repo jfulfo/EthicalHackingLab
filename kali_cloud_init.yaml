@@ -4,15 +4,19 @@ packages:
   - kali-desktop-xfce
   - xrdp
   - wireguard
+  - wireguard-tools
 write_files:
   - path: /home/${admin_username}/.xsession
-    owner: kali:kali
+    owner: ${admin_username}:${admin_username}
+    permissions: '0644'
     content: |
       xfce4-session
   - path: /home/${admin_username}/.hushlogin
-    owner: kali:kali
+    owner: ${admin_username}:${admin_username}
+    permissions: '0644'
   - path: /etc/wireguard/wg0.conf
     owner: root:root
+    permissions: '0600'
     content: |
       [Interface]
       PrivateKey = ${kali_private_key}
@@ -25,8 +29,8 @@ runcmd:
   - systemctl enable xrdp
   - systemctl start xrdp
   - cp /etc/skel/.bashrc /home/${admin_username}/.bashrc
-  - chown ${admin_username}:${admin_username} /home/admin/.bashrc
+  - chown ${admin_username}:${admin_username} /home/${admin_username}/.bashrc
   - cp /etc/skel/.zshrc /home/${admin_username}/.zshrc
-  - chown ${admin_username}:${admin_username} /home/admin/.zshrc
+  - chown ${admin_username}:${admin_username} /home/${admin_username}/.zshrc
   - wg-quick up wg0
   - systemctl enable wg-quick@wg0
