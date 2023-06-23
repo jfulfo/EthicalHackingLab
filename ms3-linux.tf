@@ -1,5 +1,5 @@
-resource "azurerm_network_interface" "ni_ms3_linux" {
-  name                = "ni_ms3_linux"
+resource "azurerm_network_interface" "nic_ms3_linux" {
+  name                = "nic_ms3_linux"
   location            = azurerm_resource_group.target_rg.location
   resource_group_name = azurerm_resource_group.target_rg.name
 
@@ -17,7 +17,7 @@ resource "azurerm_linux_virtual_machine" "ms3_linux" {
   location            = azurerm_resource_group.target_rg.location
   size                = "Standard_D2s_v3"
   admin_username      = var.ms3-linux-user
-  network_interface_ids = [azurerm_network_interface.ni_ms3_linux.id]
+  network_interface_ids = [azurerm_network_interface.nic_ms3_linux.id]
 
   admin_ssh_key {
     username       = var.ms3-linux-user

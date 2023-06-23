@@ -55,12 +55,23 @@ variable "ms3-linux-user" {
   default = "ms3linux"
 }
 
-variable "mssql-admin-user" {
+variable "mssql-user" {
   type = string
   default = "mssqladmin"
 }
 
-variable "mssql-admin-passowrd" {
+variable "mssql-password" {
   type = string
   default = "MSSQLPassword123!"
 }
+
+variable "scripts_dir" {
+  type = string
+  default = "./scripts"
+}
+
+variable "resources_dir" {
+  type = string
+  default = "./resources"
+}
+

@@ -1,20 +1,33 @@
-resource "azurerm_mssql_server" "mssql_server" {
-  name                         = var.mssql_server_name
-  resource_group_name          = azurerm_resource_group.target_rg.name
-  location                     = azurerm_resource_group.target_rg.location
-  version                      = "12.0"
-  administrator_login          = "AdminUser"
-  administrator_login_password = "AdminPassword123!"
-  minimum_tls_version          = "1.2"
+resource "azurerm_network_interface" "nic_mssql" {
+    name                = "nic_mssql"
+    location            = azurerm_resource_group.target_rg.location
+    resource_group_name = azurerm_resource_group.target_rg.name
+
+    ip_configuration {
+        name                          = "ipconfig"
+        subnet_id                     = azurerm_subnet.target_subnet.id
+        private_ip_address_allocation = "Dynamic"
+    }
 }
 
-resource "azurerm_mssql_database" "mssql_db" {
-  name           = "mssqldb"
-  server_id      = azurerm_mssql_server.mssql_server.id
-  collation      = "SQL_Latin1_General_CP1_CI_AS"
-  max_size_gb    = 20
-  sku_name       = "S0"
+resource "azurerm_windows_virtual_machine" "mssql_server" {
+  name = "MSSQLServer"
+  resource_group_name = azurerm_resource_group.target_rg.name 
+  location = azurerm_resource_group.target_rg.location
+  size = "Standard_D2s_v3"
+  admin_username = var.mssql-user
+  admin_password = var.mssql-password
+  network_interface_ids = [azurerm_network_interface.nic_mssql.id]
 
-  depends_on = [azurerm_mssql_server.mssql_server]
+  os_disk {
+    caching = "ReadWrite"
+    storage_account_type = "Premium_LRS"
+  }
+
+  source_image_reference {
+    publisher = "MicrosoftSQLServer"
+    offer = "SQL2019-WS2019"
+    sku = "Enterprise"
+    version = "latest"
+  }
 }
-

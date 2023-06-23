@@ -59,13 +59,6 @@ resource "azurerm_subnet_network_security_group_association" "subnet_nsg_associa
   network_security_group_id = azurerm_network_security_group.target_nsg.id
 }
 
-resource "azurerm_mssql_firewall_rule" "mssql_firewall_rule" {
-  name                = "sql_firewall_rule"
-  server_id           = azurerm_mssql_server.mssql_server.id
-  start_ip_address    = azurerm_linux_virtual_machine.kali_machine.private_ip_address
-  end_ip_address      = azurerm_linux_virtual_machine.kali_machine.private_ip_address
-}
-
 resource "azurerm_virtual_network" "attacker_vnet" {
   name                = "attacker_vnet"
   resource_group_name = azurerm_resource_group.attacker_rg.name

@@ -1,5 +1,5 @@
-resource "azurerm_network_interface" "ni_ad" {
-    name                = "ni_ad"
+resource "azurerm_network_interface" "nic_ad" {
+    name                = "nic_ad"
     location            = azurerm_resource_group.target_rg.location
     resource_group_name = azurerm_resource_group.target_rg.name
 
@@ -17,7 +17,7 @@ resource "azurerm_windows_virtual_machine" "ad_machine" {
   size                = "Standard_D2s_v3"
   admin_username      = var.ad-user
   admin_password      = var.ad-password
-  network_interface_ids = [azurerm_network_interface.ni_ad.id]
+  network_interface_ids = [azurerm_network_interface.nic_ad.id]
 
   os_disk {
     caching              = "ReadWrite"

@@ -29,6 +29,14 @@ resource "azurerm_storage_container" "sc" {
   container_access_type = "blob"
 }
 
+resource "null_resource" "upload_provisioners" {
+  depends_on = [azurerm_storage_container.sc]
+
+  provisioner "local-exec" {
+    command = "./upload_provisioners.sh \"${var.storage_account_name}\" \"${var.storage_container_name}\""
+  }
+}
+
 resource "null_resource" "generate_wireguard_keys"{ 
   provisioner "local-exec" {
     command = <<EOF
@@ -47,6 +55,10 @@ data "local_file" "kali_private_key" {
 data "local_file" "kali_public_key" {
   depends_on = [null_resource.generate_wireguard_keys]
   filename   = "kalipublickey"
+}
+
+data "local_file" "client_public_key" {
+  filename = "publickey"
 }
 
 resource "null_resource" "ms3_linux_packer" {
