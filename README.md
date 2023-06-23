@@ -81,20 +81,20 @@ This guide uses Ubuntu 22.04 LTS.
     ```
 10. Rename variables to unique name:
     ```
-variable "storage_account_name" {
-  type = string
-  default = "UniqueAccountName"
-}
+    variable "storage_account_name" {
+      type = string
+      default = "UniqueAccountName"
+    }
 
-variable "storage_container_name" {
-  type = string
-  default = "UniqueContainerName"
-}
+    variable "storage_container_name" {
+      type = string
+      default = "UniqueContainerName"
+    }
 
-variable "mssql_server_name" {
-  type = string 
-  default = "UniqueMSSQLName"
-}
+    variable "mssql_server_name" {
+      type = string 
+      default = "UniqueMSSQLName"
+    }
     ```
 
 11. Deploy infrastructure using Terraform:
