@@ -89,7 +89,12 @@ build {
   }
 
   provisioner "shell" {
-    inline = [ "sudo apt -y remove chef" ]
+    inline = [ 
+      "sudo apt -y remove chef", 
+      "echo \"net.ipv4.ip_forward = 1\" | sudo tee -a /etc/sysctl.conf",
+      "sudo sysctl -p",
+      "sudo iptables -t nat -A POSTROUTING -o eth0 -j MASQUERADE"
+    ]
   }
 }
 

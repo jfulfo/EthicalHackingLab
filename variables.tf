@@ -7,22 +7,27 @@ variable "ARM_SUBSCRIPTION_ID" { # should be overriden by environment variable
 
 variable "storage_account_name" {
   type = string
-  default = "ethicalhackingstorage3"
+  default = "ethicalhackingstorage4"
 }
 
 variable "storage_container_name" {
   type = string
-  default = "ethicalhackingcontainer3"
+  default = "ethicalhackingcontainer4"
 }
 
 variable "mssql_server_name" {
   type = string 
-  default = "ethicalhackingmssql3"
+  default = "ethicalhackingmssql4"
 }
 
 variable "kali-user" {
   type = string
   default = "kali"
+}
+
+variable "kali-password" {
+  type = string
+  default = "Kali123!"
 }
 
 variable "client_public_key" {
@@ -63,6 +68,16 @@ variable "mssql-user" {
 variable "mssql-password" {
   type = string
   default = "MSSQLPassword123!"
+}
+
+variable "pivot-user" {
+  type = string
+  default = "ubuntu"
+}
+
+variable "pivot-password" {
+  type = string
+  default = "Ubuntu123!"
 }
 
 variable "scripts_dir" {

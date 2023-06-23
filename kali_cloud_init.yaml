@@ -1,0 +1,32 @@
+#cloud-config
+package_upgrade: true
+packages:
+  - kali-desktop-xfce
+  - xrdp
+  - wireguard
+write_files:
+  - path: /home/${admin_username}/.xsession
+    owner: kali:kali
+    content: |
+      xfce4-session
+  - path: /home/${admin_username}/.hushlogin
+    owner: kali:kali
+  - path: /etc/wireguard/wg0.conf
+    owner: root:root
+    content: |
+      [Interface]
+      PrivateKey = ${kali_private_key}
+      Address = 10.1.10.1/24
+      ListenPort = 51820
+      [Peer]
+      PublicKey = ${client_public_key}
+      AllowedIPs = 10.1.10.2/32
+runcmd:
+  - systemctl enable xrdp
+  - systemctl start xrdp
+  - cp /etc/skel/.bashrc /home/${admin_username}/.bashrc
+  - chown ${admin_username}:${admin_username} /home/admin/.bashrc
+  - cp /etc/skel/.zshrc /home/${admin_username}/.zshrc
+  - chown ${admin_username}:${admin_username} /home/admin/.zshrc
+  - wg-quick up wg0
+  - systemctl enable wg-quick@wg0

@@ -259,3 +259,27 @@ resource "azurerm_virtual_network_peering" "target_to_attacker" {
   remote_virtual_network_id = azurerm_virtual_network.target_vnet.id
 }
 
+resource "azurerm_subnet" "pivot_subnet" {
+  name                 = "pivot_subnet"
+  resource_group_name  = azurerm_resource_group.target_rg.name
+  virtual_network_name = azurerm_virtual_network.target_vnet.name
+  address_prefixes     = ["10.0.2.0/24"]
+}
+
+resource "azurerm_route_table" "pivot_route_table" {
+  name                = "pivot_route_table"
+  location            = azurerm_resource_group.target_rg.location
+  resource_group_name = azurerm_resource_group.target_rg.name
+
+  route {
+    name                   = "pivot_route"
+    address_prefix         = "0.0.0.0/0"
+    next_hop_type          = "VirtualAppliance"
+    next_hop_in_ip_address = azurerm_network_interface.nic_ms3_linux.private_ip_address
+  }
+}
+
+resource "azurerm_subnet_route_table_association" "pivot_subnet_route_table_association" {
+  subnet_id      = azurerm_subnet.pivot_subnet.id
+  route_table_id = azurerm_route_table.pivot_route_table.id
+}

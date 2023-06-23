@@ -19,12 +19,24 @@ resource "azurerm_network_interface" "nic_kali" {
   }
 }
 
+data "template_file" "kali_cloud_init" {
+  template = file("kali_cloud_init.yaml")
+
+  vars = {
+    admin_username     = "kali"
+    kali_private_key = data.local_file.kali_private_key.content
+    client_public_key =  data.local_file.client_public_key.content
+  }
+}
+
 resource "azurerm_linux_virtual_machine" "kali_machine" {
   name                = "KaliMachine"
   resource_group_name = azurerm_resource_group.attacker_rg.name
   location            = azurerm_resource_group.attacker_rg.location
   size                = "Standard_D2s_v3"
   admin_username      = var.kali-user
+  admin_password      = var.kali-password
+  disable_password_authentication = false
   network_interface_ids = [azurerm_network_interface.nic_kali.id]
 
   admin_ssh_key {
@@ -50,26 +62,6 @@ resource "azurerm_linux_virtual_machine" "kali_machine" {
     product   = "kali"
     name      = "kali"
   }
+
+  custom_data = base64encode(data.template_file.kali_cloud_init.rendered)
 }
-
-resource "azurerm_virtual_machine_extension" "kali_extension" {
-  name                 = "kali_extension"
-  virtual_machine_id   = azurerm_linux_virtual_machine.kali_machine.id
-  publisher            = "Microsoft.Compute"
-  type                 = "CustomScriptExtension"
-  type_handler_version = "1.10"
-
-  settings = <<SETTINGS
-    {
-      "fileUris": ["http://${var.storage_account_name}.blob.core.windows.net/${var.storage_container_name}/kali_provision.sh"],
-      "commandToExecute": "./kali_provision.sh \"${data.local_file.kali_private_key.content}\" \"${data.local_file.client_public_key.content}\""
-    }
-SETTINGS
-
-  timeouts {
-    create = "90m"
-  }
-
-  depends_on = [null_resource.upload_provisioners]
-}
-
