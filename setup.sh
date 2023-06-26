@@ -76,7 +76,7 @@ ListenPort = 51820
 [Peer]
 PublicKey = $KALI_PUBLIC_KEY
 Endpoint = $KALI_IP:51820
-AllowedIPs = 0.0.0.0/0, ::/0 
+AllowedIPs = 10.0.0.0/8
 EOF
 
 # enable wireguard

@@ -112,7 +112,7 @@ This guide uses Ubuntu 22.04 LTS.
     [Peer]
     PublicKey = kali_public_key
     Endpoint = kali_public_ip:51820
-    AllowedIPs = 0.0.0.0/0, ::/0
+    AllowedIPs = 10.0.0.0/8
     ```
 
 13. Bring up VPN and establish SSH connection with Kali machine:
