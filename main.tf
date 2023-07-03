@@ -3,12 +3,12 @@ provider "azurerm" {
 }
 
 resource "azurerm_resource_group" "target_rg" {
-  name     = "target_rg"
+  name     = var.target_resource_group_name
   location = "East US"
 }
 
 resource "azurerm_resource_group" "attacker_rg" {
-  name     = "attacker_rg"
+  name     = var.attacker_resource_group_name
   location = "West US"
 }
 

@@ -7,17 +7,27 @@ variable "ARM_SUBSCRIPTION_ID" { # should be overriden by environment variable
 
 variable "storage_account_name" {
   type = string
-  default = "ethicalhackingstorage4"
+  default = "ethicalhackingstorage5"
 }
 
 variable "storage_container_name" {
   type = string
-  default = "ethicalhackingcontainer4"
+  default = "ethicalhackingcontainer5"
 }
 
 variable "mssql_server_name" {
   type = string 
-  default = "ethicalhackingmssql4"
+  default = "ethicalhackingmssql5"
+}
+
+variable "attacker_resource_group_name" {
+  type = string
+  default = "testing_attacker_group"
+}
+
+variable "target_resource_group_name" {
+  type = string
+  default = "testing_target_group"
 }
 
 variable "kali-user" {
@@ -41,6 +51,16 @@ variable "ad-user" {
 }
 
 variable "ad-password" {
+  type = string
+  default = "SecurePassword1234!"
+}
+
+variable "ad-domain-name" {
+  type = string
+  default = "ethicalhacking.local"
+}
+
+variable "ad-administrator-password" {
   type = string
   default = "SecurePassword1234!"
 }

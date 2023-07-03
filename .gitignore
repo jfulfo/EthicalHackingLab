@@ -10,3 +10,4 @@ privatekey
 kaliprivatekey
 kalipublickey 
 resources/windows_pre_downloads/*
+wg1.conf

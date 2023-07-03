@@ -123,6 +123,11 @@ This guide uses Ubuntu 22.04 LTS.
 
 For more information and help, visit the book's [GitHub repository](https://github.com/Metasploit-Book/Setup-Scripts-Instructions).
 
+## Potential Errors:
+
+### `A Retryable Error Occured`
+Delete the failed VM and its dependencies, then retry `terraform apply`.
+
 ## Contributors
 - Daniel Graham
 - Jake Fulford

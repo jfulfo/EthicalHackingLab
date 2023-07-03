@@ -43,7 +43,7 @@ resource "azurerm_virtual_machine_extension" "ms3_windows_extension" {
   settings = <<SETTINGS
     {
       "fileUris": ["http://${var.storage_account_name}.blob.core.windows.net/${var.storage_container_name}/ms3_windows_provision.ps1"],
-      "commandToExecute": "powershell.exe -ExecutionPolicy Unrestricted -File ms3_windows_provision.ps1 \"${var.storage_account_name}\" \"${var.storage_container_name}\""
+      "commandToExecute": "powershell.exe -ExecutionPolicy Unrestricted -File ms3_windows_provision.ps1 \"${var.storage_account_name}\" \"${var.storage_container_name}\" \"${var.ad-domain-name}\" \"${var.ad-administrator-password}\""
     }
 SETTINGS
 

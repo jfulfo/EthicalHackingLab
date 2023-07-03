@@ -22,6 +22,11 @@ variable "ARM_TENANT_ID" {
   sensitive = true
 }
 
+variable "target_resource_group_name" {
+  type = string
+  default = "testing_target_group"
+}
+
 packer {
   required_plugins {
     azure = {
@@ -41,7 +46,7 @@ source "azure-arm" "ms3-linux" {
   client_secret   = var.ARM_CLIENT_SECRET
   tenant_id       = var.ARM_TENANT_ID
 
-  managed_image_resource_group_name = "target_rg"
+  managed_image_resource_group_name = var.target_resource_group_name
   managed_image_name = "ms3-linux"
 
   os_type  = "Linux"

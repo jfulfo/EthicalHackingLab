@@ -83,5 +83,5 @@ EOF
 sudo wg-quick up wg0
 
 echo "Setup complete"
-echo "You can now connect to the Kali VM using the following command:\nssh kali@$KALI_IP"
+echo "You can now connect to the Kali VM using the following command: ssh kali@$KALI_IP"
 
