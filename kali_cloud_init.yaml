@@ -6,6 +6,7 @@ packages:
   - wireguard
   - wireguard-tools
   - openssl
+  - gdm3
 write_files:
   - path: /home/${admin_username}/.xsession
     owner: ${admin_username}:${admin_username}
@@ -15,19 +16,25 @@ write_files:
   - path: /home/${admin_username}/.hushlogin
     owner: ${admin_username}:${admin_username}
     permissions: '0644'
+  - path: /etc/wireguard/wg0.conf
+    owner: root:root
+    permissions: '0600'
+    content: |
+      [Interface]
+      PrivateKey = ${kali_private_key}
+      Address = 10.1.10.1/24
+      ListenPort = 51820
+
+      [Peer]
+      PublicKey = ${client_public_key}
+      AllowedIPs = 10.1.10.2/32
 runcmd:
-  - DEBIAN_FRONTEND=noninteractive apt install -f gdm3
-  - echo "root:root" | chpasswd
-  - systemctl enable xrdp
-  - systemctl start xrdp
   - cp /etc/skel/.bashrc /home/${admin_username}/.bashrc
   - chown ${admin_username}:${admin_username} /home/${admin_username}/.bashrc
   - cp /etc/skel/.zshrc /home/${admin_username}/.zshrc
   - chown ${admin_username}:${admin_username} /home/${admin_username}/.zshrc
-  - mkdir -p /etc/wireguard
-  - echo -e "[Interface]\nPrivateKey = ${kali_private_key}\nAddress = 10.1.10.1/24\nListenPort = 51820\n\n[Peer]\nPublicKey = ${client_public_key}\nAllowedIPs = 10.1.10.2/32" > /etc/wireguard/wg0.conf
-  - chmod 600 /etc/wireguard/wg0.conf
-  - chown root:root /etc/wireguard/wg0.conf
+  - systemctl enable xrdp
+  - systemctl start xrdp
   - wg-quick up wg0
   - systemctl enable wg-quick@wg0
   - touch /home/kali/.hushlogin 

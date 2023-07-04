@@ -24,7 +24,7 @@ variable "ARM_TENANT_ID" {
 
 variable "target_resource_group_name" {
   type = string
-  default = "testing_target_group"
+  default = "production_target_group"
 }
 
 packer {

@@ -22,12 +22,12 @@ variable "mssql_server_name" {
 
 variable "attacker_resource_group_name" {
   type = string
-  default = "testing_attacker_group"
+  default = "production_attacker_group"
 }
 
 variable "target_resource_group_name" {
   type = string
-  default = "testing_target_group"
+  default = "production_target_group"
 }
 
 variable "kali-user" {
