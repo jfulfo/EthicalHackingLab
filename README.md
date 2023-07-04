@@ -15,7 +15,7 @@ The Ethical Hacking Lab has been tested with the following configurations:
 - Packer Azure Plugin v1.4.2
 - Azure Cli v2.49.0
 
-## Lab Diagram
+## 📊 Lab Diagram
 
 ![EthicalHackingDiagram](https://lh3.googleusercontent.com/drive-viewer/AFGJ81ohuuGfCB6byORKmbQQMAMYOdVJHRUNi4t5iWQOgdPjjYuYoe8BdBMmSfg6_lvkWr2mMNWj_e4ywUBjFrwEmVJdxRmAcg=s1600)
 
@@ -35,8 +35,8 @@ Installation process is relatively straightforward, and can be done manually by 
     ```
 3. **Clone EthicalHacking repository:**
     ```bash
-    git clone https://github.com/jfulfo/EthicalHacking
-    cd EthicalHacking
+    git clone https://github.com/jfulfo/EthicalHackingLab
+    cd EthicalHackingLab
     ```
 4. **Install Terraform:**
     ```bash
