@@ -7,36 +7,23 @@ packages:
   - wireguard-tools
   - openssl
   - gdm3
-write_files:
-  - path: /home/${admin_username}/.xsession
-    owner: ${admin_username}:${admin_username}
-    permissions: '0644'
-    content: |
-      xfce4-session
-  - path: /home/${admin_username}/.hushlogin
-    owner: ${admin_username}:${admin_username}
-    permissions: '0644'
-  - path: /etc/wireguard/wg0.conf
-    owner: root:root
-    permissions: '0600'
-    content: |
-      [Interface]
-      PrivateKey = ${kali_private_key}
-      Address = 10.1.10.1/24
-      ListenPort = 51820
-
-      [Peer]
-      PublicKey = ${client_public_key}
-      AllowedIPs = 10.1.10.2/32
 runcmd:
-  - cp /etc/skel/.bashrc /home/${admin_username}/.bashrc
-  - chown ${admin_username}:${admin_username} /home/${admin_username}/.bashrc
-  - cp /etc/skel/.zshrc /home/${admin_username}/.zshrc
-  - chown ${admin_username}:${admin_username} /home/${admin_username}/.zshrc
+  - echo "xfce4-session" > /home/kali/.xsession
+  - chown kali:kali /home/kali/.xsession
+  - chmod 0644 /home/kali/.xsession
+  - |
+    cat > /etc/wireguard/wg0.conf << EOF
+    [Interface]
+    PrivateKey = ${kali_private_key}
+    Address = 10.1.10.1/24
+    ListenPort = 51820
+
+    [Peer]
+    PublicKey = ${client_public_key}
+    AllowedIPs = 10.1.10.2/32
+    EOF
+  - chmod 0600 /etc/wireguard/wg0.conf
   - systemctl enable xrdp
   - systemctl start xrdp
-  - wg-quick up wg0
   - systemctl enable wg-quick@wg0
-  - touch /home/kali/.hushlogin 
-  - touch /root/.hushlogin
-
+  - wg-quick up wg0

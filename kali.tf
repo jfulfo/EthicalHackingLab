@@ -23,9 +23,19 @@ data "template_file" "kali_cloud_init" {
   template = file("kali_cloud_init.yaml")
 
   vars = {
-    admin_username     = "kali"
     kali_private_key = data.local_file.kali_private_key.content
     client_public_key =  data.local_file.client_public_key.content
+  }
+}
+
+data "template_cloudinit_config" "kali_cloud_init" {
+  gzip          = true
+  base64_encode = true
+
+  part {
+    filename     = "init.cfg"
+    content_type = "text/cloud-config"
+    content      = "${data.template_file.kali_cloud_init.rendered}"
   }
 }
 
@@ -63,5 +73,5 @@ resource "azurerm_linux_virtual_machine" "kali_machine" {
     name      = "kali"
   }
 
-  custom_data = base64encode(data.template_file.kali_cloud_init.rendered)
+  custom_data = data.template_cloudinit_config.kali_cloud_init.rendered
 }
