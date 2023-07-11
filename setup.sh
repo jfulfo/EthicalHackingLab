@@ -24,22 +24,23 @@ curl -sL https://aka.ms/InstallAzureCLIDeb | sudo bash
 az login 
 
 az account list --output table
-read -p "Enter the subscription id you want to use (must be pay as you go or high enough quota): " SUBSCRIPTION_ID
-az account set --subscription $SUBSCRIPTION_ID
-az ad sp create-for-rbac --role="Contributor" --scopes="/subscriptions/$SUBSCRIPTION_ID"
+read -p "Enter the subscription id you want to use (must be pay as you go or high enough quota): " TF_VAR_ARM_SUBSCRIPTION_ID
+az account set --subscription $TF_VAR_ARM_SUBSCRIPTION_ID
+az ad sp create-for-rbac --role="Contributor" --scopes="/subscriptions/$TF_VAR_ARM_SUBSCRIPTION_ID"
 # read client id, client secret, and tenant id from output and export to bashrc
-read -p "Enter the client id (appId): " CLIENT_ID
-read -p "Enter the client secret (password): " CLIENT_SECRET
-read -p "Enter the tenant id (tenant): " TENANT_ID
+read -p "Enter the client id (appId): " PKR_VAR_ARM_CLIENT_ID
+read -p "Enter the client secret (password): " PKR_VAR_ARM_CLIENT_SECRET
+read -p "Enter the tenant id (tenant): " PKR_VAR_ARM_TENANT_ID
 az vm image terms accept --urn kali-linux:kali:kali:latest
 
 # export variables to bashrc
-echo "export TF_VAR_ARM_SUBSCRIPTION_ID=$SUBSCRIPTION_ID" >> ~/.bashrc
-echo "export PKR_VAR_ARM_SUBSCRIPTION_ID=$SUBSCRIPTION_ID" >> ~/.bashrc
-echo "export PKR_VAR_ARM_CLIENT_ID=$CLIENT_ID" >> ~/.bashrc 
-echo "export PKR_VAR_ARM_CLIENT_SECRET=$CLIENT_SECRET" >> ~/.bashrc 
-echo "export PKR_VAR_ARM_TENANT_ID=$TENANT_ID" >> ~/.bashrc 
-source ~/.bashrc
+echo "Adding variables to ~/.bashrc..."
+PKR_VAR_ARM_SUBSCRIPTION_ID=$TF_VAR_ARM_SUBSCRIPTION_ID
+echo "export TF_VAR_ARM_SUBSCRIPTION_ID=$TF_VAR_ARM_SUBSCRIPTION_ID" >> ~/.bashrc
+echo "export PKR_VAR_ARM_SUBSCRIPTION_ID=$TF_VAR_ARM_SUBSCRIPTION_ID" >> ~/.bashrc
+echo "export PKR_VAR_ARM_CLIENT_ID=$PKR_VAR_ARM_CLIENT_ID" >> ~/.bashrc 
+echo "export PKR_VAR_ARM_CLIENT_SECRET=$PKR_VAR_ARM_CLIENT_SECRET" >> ~/.bashrc 
+echo "export PKR_VAR_ARM_TENANT_ID=$PKR_VAR_ARM_TENANT_ID" >> ~/.bashrc 
 
 # initialize terraform and packer
 terraform init 
