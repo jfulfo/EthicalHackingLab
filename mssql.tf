@@ -25,9 +25,9 @@ resource "azurerm_windows_virtual_machine" "mssql_server" {
   }
 
   source_image_reference {
-    publisher = "MicrosoftSQLServer"
-    offer = "SQL2019-WS2019"
-    sku = "Enterprise"
+    publisher = "microsoftsqlserver"
+    offer = "sql2019-ws2022"
+    sku = "sqldev"
     version = "latest"
   }
 }
