@@ -7,7 +7,7 @@ sudo apt install -y net-tools openssh-server curl gnupg software-properties-comm
 
 # generate ssh key with no passphrase
 read -p "Do you want to overwrite the existing ssh key (~/.ssh/id_rsa)? (Y/n): " OVERWRITE
-if [ $OVERWRITE == "n" ]; then
+if [[ $OVERWRITE == "n" ]]; then
     exit 1
 fi 
 ssh-keygen -t rsa -b 4096 -f ~/.ssh/id_rsa -q -N "" <<< y >/dev/null 2>&1
@@ -53,9 +53,9 @@ umask 077
 wg genkey > privatekey 
 wg pubkey < privatekey > publickey
 
-echo "We will now run terraform to create the VMs. This will take a ~40 minutes"
+echo "We will now run terraform to create the VMs. This will take a ~25 minutes"
 read -p "Continue? (Y/n): " CONTINUE
-if [ $CONTINUE == "n" ]; then
+if [[ $CONTINUE == "n" ]]; then
     exit 1
 fi
 terraform apply -auto-approve
