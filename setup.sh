@@ -3,7 +3,7 @@
 # Update and install packages
 sudo apt update
 sudo apt upgrade -y
-sudo apt install -y net-tools openssh-server curl gnupg software-properties-common
+sudo apt install -y net-tools openssh-server curl gnupg software-properties-common zip
 
 # generate ssh key with no passphrase
 read -p "Do you want to overwrite the existing ssh key (~/.ssh/id_rsa)? (Y/n): " OVERWRITE
