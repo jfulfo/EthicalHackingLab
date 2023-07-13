@@ -69,7 +69,7 @@ terraform output
 # get local privatekey
 PRIVATE_KEY=$(cat privatekey)
 read -p "Enter the public IP of the Kali VM: " KALI_IP
-read -p "Eneter the public key of the Kali VM: " KALI_PUBLIC_KEY
+read -p "Enter the public key of the Kali VM: " KALI_PUBLIC_KEY
 
 # create wireguard config
 sudo tee /etc/wireguard/wg0.conf <<EOF
@@ -88,5 +88,5 @@ EOF
 sudo wg-quick up wg0
 
 echo "Setup complete"
-echo "You can now connect to the Kali VM using the following command: ssh kali@$KALI_IP"
+echo "You can now connect to the Kali VM using the following command: ssh kali@10.1.1.4"
 
