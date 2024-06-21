@@ -17,7 +17,7 @@ The Ethical Hacking Lab has been tested with the following configurations:
 
 ## 📊 Lab Diagram
 
-![EthicalHackingDiagram](https://lh3.googleusercontent.com/drive-viewer/AFGJ81ohuuGfCB6byORKmbQQMAMYOdVJHRUNi4t5iWQOgdPjjYuYoe8BdBMmSfg6_lvkWr2mMNWj_e4ywUBjFrwEmVJdxRmAcg=s1600)
+![EthicalHackingDiagram](network-diagram.png)
 
 ## 💻 Installation
 
